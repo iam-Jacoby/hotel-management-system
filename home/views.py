@@ -3,6 +3,7 @@ from django.shortcuts import render, redirect
 from django.contrib.auth import login, logout
 from django.contrib.auth.decorators import login_required
 from django.contrib.auth.forms import AuthenticationForm
+from .forms import RegisterForm
 
 def login_view(request):
     if request.user.is_authenticated:
@@ -25,3 +26,15 @@ def homepage(request):
 # def logout_view(request):
 #     logout(request)
 #     return render(request, 'logout.html')
+
+def signup_view(request):
+    if request.method == "POST":
+        form = RegisterForm(request.POST)
+        if form.is_valid():
+            user = form.save()
+            login(request, user)  # Log in the user immediately after signup
+            return redirect("home")  # Redirect to homepage
+    else:
+        form = RegisterForm()
+
+    return render(request, "signup.html", {"form": form})

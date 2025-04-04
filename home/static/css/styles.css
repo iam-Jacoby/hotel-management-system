@@ -1,0 +1,13 @@
+/* home/static/css/styles.css */
+
+body {
+    background-color: #121212; /* Dark Background */
+    color: white;
+}
+
+.card {
+    background-color: #1e1e1e; /* Dark Grey */
+    border-radius: 15px;
+    color: white;
+    box-shadow: 0px 4px 10px rgba(255, 255, 255, 0.1);
+}
