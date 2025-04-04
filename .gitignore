@@ -1,0 +1,15 @@
+# Ignore Python cache and virtual environment
+__pycache__/
+*.pyc
+*.pyo
+venv/
+env/
+*.sqlite3
+
+# Ignore Django secret files
+.env
+
+# Ignore system files
+.DS_Store
+.idea/
+.vscode/
