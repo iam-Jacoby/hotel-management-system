@@ -3,7 +3,9 @@ from django.shortcuts import render, redirect
 from django.contrib.auth import login, logout
 from django.contrib.auth.decorators import login_required
 from django.contrib.auth.forms import AuthenticationForm
-from .forms import RegisterForm
+from .forms import RegisterForm, TestimonialForm
+from .models import Room, Testimonial
+from django.db.models import Q
 
 def login_view(request):
     if request.user.is_authenticated:
@@ -21,19 +23,35 @@ def login_view(request):
 
 @login_required
 def homepage(request):
-    return render(request, 'index.html')
+    room_type = request.GET.get('room_type')
+    if room_type:
+        featured_rooms = Room.objects.filter(room_type=room_type)
+    else:
+        featured_rooms = Room.objects.all()
 
-# def logout_view(request):
-#     logout(request)
-#     return render(request, 'logout.html')
+    testimonials = Testimonial.objects.all()
+    form = TestimonialForm()
+
+    if request.method == 'POST':
+        form = TestimonialForm(request.POST)
+        if form.is_valid():
+            form.save()
+            return redirect('home')
+
+    return render(request, 'index.html', {
+        'featured_rooms': featured_rooms,
+        'testimonials': testimonials,
+        'form': form,
+        'selected_type': room_type
+    })
 
 def signup_view(request):
     if request.method == "POST":
         form = RegisterForm(request.POST)
         if form.is_valid():
             user = form.save()
-            login(request, user)  # Log in the user immediately after signup
-            return redirect("home")  # Redirect to homepage
+            login(request, user)  
+            return redirect("home") 
     else:
         form = RegisterForm()
 

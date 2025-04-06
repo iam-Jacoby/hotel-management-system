@@ -6,6 +6,7 @@
     <meta name="viewport" content="width=device-width, initial-scale=1">
     <title>Hotel Management System - Home</title>
     <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
     <link rel="stylesheet" href="{% static 'css/styles.css' %}">
 </head>
 <body class="bg-dark text-white">
@@ -34,9 +35,76 @@
         </div>
     </nav>
 
+    <!-- Hero Section: Add this right after the navbar -->
+    <div class="hero-section text-center text-white d-flex align-items-center justify-content-center" style='height: 400px; background: url("{% static 'images/marten-bjork-n_IKQDCyrG0-unsplash_transcpr.jpg' %}") center/cover no-repeat;'>
+        <div style="background-color: rgba(0, 0, 0, 0.5); padding: 20px;">
+            <h1>Welcome to Your Comfort Zone</h1>
+            <p>Book your stay at our luxury hotel with ease</p>
+        </div>
+    </div>
+    
     <div class="container text-center mt-5">
         <h1>Welcome, {{ user.username }} to the Hotel Management System</h1>
         <p>This is a simple hotel booking system.</p>
+    </div>
+
+    <!-- Rest of your page content -->
+    <div class="container mt-5">
+        <h2><i class="fas fa-bed"></i> Featured Rooms</h2>
+        <form method="get" class="mb-4 text-center">
+            <label class="me-2 text-white">Filter by Room Type:</label>
+            <select name="room_type" onchange="this.form.submit()" class="form-select d-inline w-auto">
+                <option value="">All</option>
+                <option value="Deluxe" {% if selected_type == 'Deluxe' %}selected{% endif %}>Deluxe</option>
+                <option value="Standard" {% if selected_type == 'Standard' %}selected{% endif %}>Standard</option>
+                <option value="Family" {% if selected_type == 'Family' %}selected{% endif %}>Family</option>
+            </select>
+        </form>
+        <div class="row">
+            {% for room in featured_rooms %}
+            <div class="col-md-4 mb-4">
+                <div class="card h-100 bg-dark text-white">
+                    <!-- Debug line -->
+                    <p>{{ room.room_type }}</p>
+                    <p>{% static 'images/'|add:room.room_type|add:'.jpg' %}</p>
+                    
+                    <img src="{% static 'images/'|add:room.room_type|add:'.jpg' %}" class="card-img-top" alt="{{ room.name }}">
+                    
+                    <div class="card-body">
+                        <h5 class="card-title">{{ room.name }}</h5>
+                        <p class="card-text">{{ room.description }}</p>
+                        <p class="card-text"><strong>₹{{ room.price }}</strong> / night</p>
+                        <a href="#" class="btn btn-primary">Book Now</a>
+                    </div>
+                </div>
+            </div>
+            {% endfor %}
+        </div>        
+    </div>    
+    
+    <div class="container mt-5">
+        <h2><i class="fas fa-comments"></i> Guest Testimonials</h2>
+        <div class="row">
+            {% for testimonial in testimonials %}
+            <div class="col-md-4 mb-4">
+                <div class="card bg-dark text-white p-3">
+                    <blockquote class="blockquote mb-0">
+                        <p>"{{ testimonial.review }}"</p>
+                        <footer class="blockquote-footer text-light">{{ testimonial.name }}</footer>
+                    </blockquote>
+                </div>
+            </div>
+            {% endfor %}
+        </div>
+    </div>    
+
+    <div class="container mt-5">
+        <h3 class="text-white">Leave a Testimonial</h3>
+        <form method="post">
+            {% csrf_token %}
+            {{ form.as_p }}
+            <button type="submit" class="btn btn-success">Submit</button>
+        </form>
     </div>
 
     <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/js/bootstrap.bundle.min.js"></script>
